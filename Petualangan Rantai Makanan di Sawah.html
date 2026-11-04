@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Petualangan Rantai Makanan di Sawah</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f9d8;--card:#fff;--ink:#173a24;--g:#1f8a42;--h:#14602e;--gl:#c8f3ac;--y:#ffd93d;--sh:#14602e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10261a;--card:#1b3d2a;--ink:#e8f7dc;--h:#8be3a3;--gl:#2a5a3a}}
+:root[data-theme="dark"]{--bg:#10261a;--card:#1b3d2a;--ink:#e8f7dc;--h:#8be3a3;--gl:#2a5a3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 18px/1.5 'Baloo 2','Comic Sans MS','Trebuchet MS',system-ui,sans-serif}
+.app{max-width:820px;margin:0 auto;padding:12px}
+.bar{height:14px;background:var(--gl);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--g);border-radius:9px;transition:width .5s}
+.s{display:none;background:var(--card);border:4px solid var(--g);border-radius:28px;padding:20px;margin:12px 0}
+.s.on{display:block;animation:pop .5s}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+h1,h2,h3{color:var(--h);margin:.2em 0;font-weight:800}
+h1{font-size:2.1rem;line-height:1.15}h3{font-size:1.2rem}
+button{font:inherit;font-weight:700;border:0;border-radius:18px;padding:10px 18px;background:var(--g);color:#fff;cursor:pointer;box-shadow:0 5px 0 var(--sh);transition:transform .1s}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sh)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.card:focus-visible{outline:4px solid var(--y);outline-offset:2px}
+.alt{background:var(--y);color:#3a3000;box-shadow:0 5px 0 #c9a400}
+.scene{width:100%;border-radius:20px;display:block;margin-bottom:8px}
+.id{display:inline-block;background:var(--gl);border-radius:16px;padding:4px 14px;margin:4px 6px 4px 0;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--gl);border-radius:22px;padding:14px;text-align:center;cursor:pointer;border:3px dashed var(--g)}
+.card .em{font-size:3rem;display:block;animation:bob 2.5s ease-in-out infinite}
+.card p{display:none;margin:.3em 0 0;font-size:.95rem}
+.card.open p{display:block}
+@keyframes bob{50%{transform:translateY(-7px)}}
+.chain{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:2.3rem;margin:10px 0}
+.chain small{font-size:1.2rem;color:var(--h)}
+.slots{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:12px 0}
+.slot{width:70px;min-height:76px;border:3px dashed var(--g);border-radius:18px;display:grid;place-items:center;text-align:center;font-size:2rem;line-height:1.1;padding:4px}
+.slot small{display:block;font-size:.7rem;font-weight:700;color:var(--h)}
+.slot.f{border-style:solid;background:var(--gl);animation:pop .4s}
+.items{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.item,.opt{background:var(--card);color:var(--ink);border:3px solid var(--g);box-shadow:0 4px 0 var(--sh)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0}
+.opt.right{background:#d6f7c2;color:#14602e}
+.opt.wrong{background:#ffe1d2;color:#8a3410}
+.fb{padding:12px 16px;border-radius:18px;margin-top:12px;font-weight:700}
+.ok{background:#d6f7c2;color:#14602e;animation:pop .4s}
+.no{background:#ffe1d2;color:#8a3410;animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+input,select,textarea{font:inherit;padding:8px 12px;border-radius:14px;border:3px solid var(--g);background:var(--card);color:var(--ink);max-width:100%}
+textarea{width:100%;box-sizing:border-box}
+.row{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.row span{flex:1 1 200px}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+.big{font-size:3.2rem;text-align:center;margin:0}
+.stars{font-size:2.4rem;text-align:center}
+.cf{position:fixed;font-size:2rem;pointer-events:none;animation:fly 1.2s ease-out forwards;z-index:9}
+@keyframes fly{to{transform:translateY(-170px) rotate(40deg);opacity:0}}
+label.ck{display:block;margin:6px 0}
+.feel button{font-size:1.8rem;padding:6px 14px;background:var(--gl);box-shadow:0 4px 0 var(--sh)}
+.feel button.sel{background:var(--y)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="bar"><i></i></div>
+
+<!-- 1 Pembuka -->
+<section class="s on">
+<svg class="scene" viewBox="0 0 400 150" role="img" aria-label="Pemandangan sawah dengan matahari dan bukit">
+<rect width="400" height="150" fill="#bfe9ff"/>
+<circle cx="340" cy="38" r="24" fill="#ffd93d"/>
+<path d="M0 80 Q80 30 170 78 T400 70 V150 H0Z" fill="#6fcf6a"/>
+<rect y="98" width="400" height="52" fill="#3fae4a"/>
+<path d="M0 112H400M0 128H400M0 143H400" stroke="#2b8a3a" stroke-width="3"/>
+<text x="20" y="108" font-size="26">🌾</text><text x="110" y="124" font-size="26">🌾</text><text x="215" y="108" font-size="26">🌾</text>
+<text x="300" y="124" font-size="26">🌾</text><text x="60" y="72" font-size="30">🦅</text>
+<text x="160" y="140" font-size="26">🐸</text><text x="262" y="142" font-size="26">🐛</text>
+</svg>
+<h1>Petualangan Rantai Makanan di Sawah</h1>
+<p>Halo, teman-teman! Ayo kenali siapa saja yang tinggal di sawah dan apa perannya.</p>
+<span class="id">📘 IPAS</span><span class="id">🏫 Kelas 5 SD</span><span class="id">🌱 Fase C</span><span class="id">🌾 Ekosistem Sawah</span>
+<p><label>Namamu: <input id="nama" placeholder="Tulis namamu" maxlength="30"></label></p>
+<p><button class="alt" onclick="go(1)">Mulai Petualangan 🚀</button></p>
+</section>
+
+<!-- 2 Tujuan -->
+<section class="s">
+<h2>🎯 Tujuan Belajar</h2>
+<p>Setelah belajar, aku bisa:</p>
+<div class="grid">
+<div class="card open"><span class="em">🔍</span><p><b>Mengenali</b> peran makhluk hidup di sawah.</p></div>
+<div class="card open"><span class="em">🌾</span><p><b>Menyebutkan</b> produsen, konsumen, dan pengurai.</p></div>
+<div class="card open"><span class="em">🔗</span><p><b>Menyusun</b> rantai makanan sederhana.</p></div>
+</div>
+</section>
+
+<!-- 3 Materi -->
+<section class="s">
+<h2>📖 Materi Singkat</h2>
+<p>Rantai makanan adalah urutan siapa memakan siapa. Energi berpindah dari satu makhluk hidup ke makhluk hidup lain. <b>Ketuk kartu</b> untuk membuka!</p>
+<div class="chain" aria-label="Rantai makanan: padi, belalang, katak, ular, elang">🌾<small>➜</small>🐛<small>➜</small>🐸<small>➜</small>🐍<small>➜</small>🦅</div>
+<div class="grid">
+<div class="card" tabindex="0" role="button"><span class="em">🌾</span><b>Produsen</b><p>Membuat makanan sendiri dengan bantuan sinar matahari. Contoh: padi, rumput.</p></div>
+<div class="card" tabindex="0" role="button"><span class="em">🐛</span><b>Konsumen</b><p>Tidak bisa membuat makanan sendiri, jadi harus makan makhluk lain. Herbivora makan tumbuhan (belalang, tikus). Karnivora makan hewan (ular, elang). Omnivora makan keduanya (ayam).</p></div>
+<div class="card" tabindex="0" role="button"><span class="em">🍄</span><b>Pengurai</b><p>Mengurai makhluk hidup yang sudah mati menjadi tanah yang subur. Contoh: jamur dan bakteri.</p></div>
+<div class="card" tabindex="0" role="button"><span class="em">☀️</span><b>Matahari</b><p>Sumber energi utama. Tanpa matahari, padi tidak bisa tumbuh.</p></div>
+</div>
+</section>
+
+<!-- 4 Aktivitas -->
+<section class="s">
+<h2>🧩 Aktivitas: Susun Rantai Makananku</h2>
+<p>Ketuk makhluk hidup sesuai urutan, mulai dari yang <b>dimakan lebih dulu</b>. Panah artinya “dimakan oleh”.</p>
+<div class="slots" id="slots"></div>
+<div class="items" id="items"></div>
+<div id="afb" role="status"></div>
+<p><button class="alt" onclick="initAct()">Ulangi 🔄</button></p>
+</section>
+
+<!-- 5 Kuis -->
+<section class="s">
+<h2>📝 Kuis Seru</h2>
+<div id="quiz"></div>
+</section>
+
+<!-- 6 Umpan balik -->
+<section class="s">
+<h2 id="rh">🏆 Hasilmu</h2>
+<p class="stars" id="stars"></p>
+<p class="big" id="skor"></p>
+<p id="pesan" style="text-align:center"></p>
+<h3>💭 Refleksi</h3>
+<label class="ck"><input type="checkbox"> Aku bisa menyebutkan produsen di sawah.</label>
+<label class="ck"><input type="checkbox"> Aku bisa membedakan herbivora, karnivora, dan omnivora.</label>
+<label class="ck"><input type="checkbox"> Aku bisa menyusun rantai makanan.</label>
+<p>Perasaanku hari ini:</p>
+<div class="feel" id="feel"><button data-f="1" aria-label="Senang">😄</button> <button data-f="2" aria-label="Biasa saja">🙂</button> <button data-f="3" aria-label="Masih bingung">🤔</button></div>
+<p>Hal paling seru yang kupelajari:</p>
+<textarea rows="2" placeholder="Tulis di sini..."></textarea>
+<p><button id="sv">Simpan Refleksi 💚</button> <button class="alt" id="rs">Main Lagi 🔄</button></p>
+<div id="thx" role="status"></div>
+</section>
+
+<div class="nav"><button id="prev">⬅ Kembali</button><span id="lbl"></span><button id="next">Lanjut ➡</button></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),S=[...document.querySelectorAll('.s')];
+const OK='Wah tepat sekali!',NO='Jangan berkecil hati, salah itu wajar!';
+let cur=0,done=false;
+function go(n){cur=Math.max(0,Math.min(S.length-1,n));S.forEach((e,i)=>e.classList.toggle('on',i===cur));
+$('.bar i').style.width=((cur+1)/S.length*100)+'%';$('#prev').disabled=cur===0;
+$('#next').disabled=cur===S.length-1||(cur===4&&!done);$('#lbl').textContent=(cur+1)+' / '+S.length;scrollTo(0,0);}
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+function confetti(){for(let i=0;i<10;i++){const e=document.createElement('span');e.className='cf';e.textContent=['🌟','🌾','🎉','💚'][i%4];
+e.style.left=(15+Math.random()*70)+'vw';e.style.top=(45+Math.random()*25)+'vh';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}}
+document.querySelectorAll('.card:not(.open)').forEach(c=>{c.onclick=()=>c.classList.toggle('open');c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();c.click();}}});
+
+/* Aktivitas */
+const CH=[['🌾','Padi','Produsen'],['🐛','Belalang','Konsumen 1'],['🐸','Katak','Konsumen 2'],['🐍','Ular','Konsumen 3'],['🦅','Elang','Konsumen 4']];
+let step=0;
+function initAct(){step=0;$('#afb').innerHTML='';
+$('#slots').innerHTML=CH.map((c,i)=>(i?'<span>➜</span>':'')+'<div class="slot" id="sl'+i+'">?</div>').join('');
+const o=[...CH.keys()].sort(()=>Math.random()-.5);
+$('#items').innerHTML=o.map(i=>'<button class="item" data-i="'+i+'">'+CH[i][0]+' '+CH[i][1]+'</button>').join('');
+document.querySelectorAll('.item').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,f=$('#afb');
+if(i===step){const s=$('#sl'+i);s.className='slot f';s.innerHTML=CH[i][0]+'<small>'+CH[i][2]+'</small>';b.remove();step++;
+f.className='fb ok';f.textContent=step===5?OK+' Rantaimu lengkap! Padi si produsen, lalu empat konsumen. Hebat!':OK;if(step===5)confetti();}
+else{f.className='fb no';f.textContent=NO+' Petunjuk: siapa yang dimakan paling awal?';}
+});}
+initAct();
+
+/* Kuis */
+const Q=[
+{t:'mc',q:'Padi membuat makanannya sendiri dengan bantuan sinar matahari. Padi berperan sebagai ...',o:['Produsen','Konsumen','Pengurai','Pemangsa'],a:0,e:'Tumbuhan hijau disebut produsen.'},
+{t:'mc',q:'Belalang memakan daun padi. Belalang termasuk ...',o:['Produsen','Konsumen','Pengurai','Matahari'],a:1,e:'Belalang tidak bisa membuat makanan sendiri, jadi ia konsumen.'},
+{t:'fi',q:'Jamur dan bakteri yang mengurai makhluk mati disebut ____.',a:['pengurai','dekomposer'],e:'Pengurai mengubah sisa makhluk hidup menjadi zat yang menyuburkan tanah.'},
+{t:'mt',q:'Jodohkan makhluk hidup dengan perannya!',p:[['🌾 Padi','Produsen'],['🐍 Ular','Konsumen'],['🍄 Jamur','Pengurai']],e:'Produsen membuat makanan, konsumen memakan, pengurai menguraikan.'},
+{t:'mc',q:'Dalam rantai makanan di sawah, katak dimakan oleh ...',o:['Padi','Belalang','Ular','Jamur'],a:2,e:'Padi ➜ belalang ➜ katak ➜ ular ➜ elang.'},
+{t:'fi',q:'Hewan pemakan tumbuhan disebut ____. (satu kata)',a:['herbivora'],e:'Contohnya belalang, tikus, dan siput.'},
+{t:'mc',q:'Panah di rantai makanan (🌾 ➜ 🐛) artinya ...',o:['Padi memakan belalang','Padi dimakan belalang','Padi mengalahkan belalang','Padi lebih besar'],a:1,e:'Panah menunjukkan arah perpindahan makanan dan energi.'},
+{t:'mt',q:'Jodohkan hewan dengan jenis makanannya!',p:[['🐭 Tikus (makan padi)','Herbivora'],['🦅 Elang (makan ular)','Karnivora'],['🐔 Ayam (makan padi dan cacing)','Omnivora']],e:'Herbivora makan tumbuhan, karnivora makan hewan, omnivora makan keduanya.'},
+{t:'fi',q:'Sumber energi utama bagi semua rantai makanan adalah ____.',a:['matahari','sinar matahari'],e:'Padi memakai sinar matahari untuk membuat makanan.'},
+{t:'mc',q:'Jika semua katak hilang dari sawah, apa yang mungkin terjadi?',o:['Belalang bertambah banyak','Padi bertambah subur','Elang makin gemuk','Tidak terjadi apa-apa'],a:0,e:'Tidak ada yang memakan belalang, sehingga padi bisa rusak.'}];
+let qi=0,score=0,lock=false;
+function rq(){const box=$('#quiz');
+if(qi>=Q.length){done=true;$('#next').disabled=false;box.innerHTML='<p class="big">🎉</p><p style="text-align:center">Kuis selesai! Ketuk tombol untuk melihat hasilmu.</p><p style="text-align:center"><button class="alt" id="see">Lihat Hasil 🏆</button></p>';$('#see').onclick=()=>{res();go(5);};return;}
+const q=Q[qi];lock=false;let h='<h3>Soal '+(qi+1)+' dari '+Q.length+'</h3><p>'+q.q+'</p>';
+if(q.t==='mc')h+=q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+o+'</button>').join('');
+if(q.t==='fi')h+='<div class="row"><input id="fi" autocomplete="off" placeholder="Tulis jawabanmu"><button id="chk">Periksa</button></div>';
+if(q.t==='mt'){const op=[...new Set(q.p.map(x=>x[1]))];h+=q.p.map((p,i)=>'<div class="row"><span>'+p[0]+'</span><select data-i="'+i+'"><option value="">Pilih...</option>'+op.map(o=>'<option>'+o+'</option>').join('')+'</select></div>').join('')+'<button id="chk">Periksa</button>';}
+box.innerHTML=h+'<div id="fb" role="status"></div>';
+if(q.t==='mc')box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(lock)return;const i=+b.dataset.i;b.classList.add(i===q.a?'right':'wrong');
+box.querySelectorAll('.opt')[q.a].classList.add('right');fin(i===q.a,'Jawaban benar: '+q.o[q.a]+'. ');});
+if(q.t==='fi'){const go1=()=>{if(lock)return;const v=$('#fi').value.trim().toLowerCase();if(!v)return;fin(q.a.includes(v),'Jawaban benar: '+q.a[0]+'. ');};$('#chk').onclick=go1;$('#fi').onkeydown=e=>{if(e.key==='Enter')go1();};}
+if(q.t==='mt')$('#chk').onclick=()=>{if(lock)return;const s=[...box.querySelectorAll('select')];if(s.some(x=>!x.value))return;
+fin(s.every((x,i)=>x.value===q.p[i][1]),'Jawaban benar: '+q.p.map(p=>p[0]+' = '+p[1]).join('; ')+'. ');};}
+function fin(ok,ans){lock=true;if(ok){score++;confetti();}const f=$('#fb');f.className='fb '+(ok?'ok':'no');
+f.innerHTML=(ok?OK:NO+' '+ans)+'<br><small>'+Q[qi].e+'</small><br><button class="alt" id="nx" style="margin-top:8px">'+(qi===Q.length-1?'Selesai':'Soal berikutnya')+' ➡</button>';
+$('#nx').onclick=()=>{qi++;rq();};$('#nx').focus();}
+rq();
+
+/* Hasil dan refleksi */
+function res(){const n=($('#nama').value||'Teman').trim();$('#rh').textContent='🏆 Hasilmu, '+n+'!';$('#skor').textContent=score*10+' / 100';
+$('#stars').textContent='⭐'.repeat(score>=8?3:score>=5?2:1);
+$('#pesan').textContent=score>=8?'Luar biasa! Kamu jagoan rantai makanan sawah!':score>=5?'Bagus sekali! Sedikit lagi kamu jadi jagoan. Ayo ulangi materinya!':'Tidak apa-apa, belajar itu proses. Baca materinya lagi lalu coba kuis sekali lagi ya!';if(score>=8)confetti();}
+document.querySelectorAll('#feel button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#feel button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');});
+$('#sv').onclick=()=>{$('#thx').className='fb ok';$('#thx').textContent='Terima kasih sudah berefleksi! Kamu hebat 💚';};
+$('#rs').onclick=()=>{qi=0;score=0;done=false;rq();initAct();$('#thx').textContent='';$('#thx').className='';go(0);};
+go(0);
+</script>
+</body>
+</html>
